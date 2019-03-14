@@ -5,7 +5,7 @@
 int main() {
     uuid_t uuid;
     uuid_generate_random(uuid);
-    uuid_string_t uuidString;
+    char uuidString[37]
     uuid_unparse(uuid, uuidString);
     return EXIT_SUCCESS;
 }
