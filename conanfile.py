@@ -5,7 +5,7 @@ from conans.client.tools.oss import get_gnu_triplet
 class DebianDependencyConan(ConanFile):
     name = "libuuid1"
     version = "2.27.1"
-    build_version = "6ubuntu3.6" 
+    build_version = "6ubuntu3.7" 
     homepage = "https://packages.ubuntu.com/xenial-updates/libuuid1"
     # dev_url = https://packages.ubuntu.com/xenial-updates/uuid-dev
     description = "The libuuid library generates and parses 128-bit Universally Unique IDs (UUIDs). A UUID is an identifier that is unique within the space of all such identifiers across both space and time. It can be used for multiple purposes, from tagging objects with an extremely short lifetime to reliably identifying very persistent objects across a network."
@@ -18,6 +18,8 @@ class DebianDependencyConan(ConanFile):
         # ubuntu does not have v7 specific libraries
         if (arch_string) == "armv7hf":
             return "armhf"
+        elif (arch_string) == "armv8":
+            return "arm64"
         elif (arch_string) == "x86_64":
             return "amd64"
         return arch_string
@@ -45,19 +47,29 @@ class DebianDependencyConan(ConanFile):
         if self.settings.os == "Linux":
             if self.settings.arch == "x86_64":
                 # https://packages.ubuntu.com/xenial-updates/amd64/libuuid1/download
-                sha_lib = "c03d93e85e4fdf6fbb3219155a0eb8f474b88573a674ab4412eb9c5dca17aae6"
+                sha_lib = "0069b9fe2ac138b980db186d88369e40d68570ab31925c19f9beabe1eb3af79e"
                 # https://packages.ubuntu.com/xenial-updates/amd64/uuid-dev/download
-                sha_dev = "2bb72d7b9b07e758d12849dc5a0e167142a6bccd271d3f12c05e5f24f98d994a"
+                sha_dev = "a9d5d94c8181fcafa7464fb3298a36ece0ff64f1df7d599fe7258fa91dc23d62"
                 
                 url_lib = ("http://us.archive.ubuntu.com/ubuntu/pool/main/u/util-linux/libuuid1_%s-%s_%s.deb"
                    % (str(self.version), self.build_version, self.translate_arch()))
                 url_dev = ("http://us.archive.ubuntu.com/ubuntu/pool/main/u/util-linux/uuid-dev_%s-%s_%s.deb"
                    % (str(self.version), self.build_version, self.translate_arch()))
-            else:
+            elif self.settings.arch == "armv8":
+                # https://packages.ubuntu.com/xenial-updates/arm64/libuuid1/download
+                sha_lib = "1d886309c5b24257e5cc6ba0aa27085b01fc4702049b780e01fef2dce52b0c70"
+                # https://packages.ubuntu.com/xenial-updates/arm64/uuid-dev/download
+                sha_dev = "8086d900b015b4be3a78c43c4a8a41954998a8d978e42c4d82b513468d8dc6a4"
+                
+                url_lib = ("http://ports.ubuntu.com/ubuntu-ports/pool/main/u/util-linux/libuuid1_%s-%s_%s.deb"
+                   % (str(self.version), self.build_version, self.translate_arch()))
+                url_dev = ("http://ports.ubuntu.com/ubuntu-ports/pool/main/u/util-linux/uuid-dev_%s-%s_%s.deb"
+                   % (str(self.version), self.build_version, self.translate_arch()))
+            else: # armv7hf
                 # https://packages.ubuntu.com/xenial-updates/armhf/libuuid1/download
-                sha_lib = "5ce061ef0ae501fa8a5ce30e83fdd2df8b575d10b175d0d2472580bf02b3a656"
+                sha_lib = "029dfbd95f619bdaf54a663dd5a92a5ec1d45447deeb81383e338c7aed5741b6"
                 # https://packages.ubuntu.com/xenial-updates/armhf/uuid-dev/download
-                sha_dev = "30813e80dc08493f11ba55a6cb7e27f006ad3846fe2e1cfe5e34625161093b1f"
+                sha_dev = "3b6ffd5b606ede5d0f3d9c4284bfd5a75a3cbc45bfd7aa008ac943f0b0c97912"
                 
                 url_lib = ("http://ports.ubuntu.com/ubuntu-ports/pool/main/u/util-linux/libuuid1_%s-%s_%s.deb"
                    % (str(self.version), self.build_version, self.translate_arch()))
